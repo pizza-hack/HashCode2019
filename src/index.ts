@@ -6,13 +6,13 @@ import { Slide } from "./slide.model";
 import { createHorizontalSlide, createVerticalSlide } from "./create-slides";
 import { getScore, getPairScore } from "./get-score";
 
-export const fileName = 'e_shiny_selfies.txt';
+export const fileName = 'd_pet_pictures.txt';
 
 const photos: Photo[] = readData();
 const verticalPhotos: Photo[] = photos.filter(photo => photo.orientation === PhotoOrientation.vertical);
 const horizontalPhotos: Photo[] = photos.filter(photo => photo.orientation === PhotoOrientation.horizontal);
 
-const initialSlides: Slide[] = [];
+let initialSlides: Slide[] = [];
 
 for (const photo of horizontalPhotos) {
   initialSlides.push(
@@ -25,8 +25,11 @@ for (let i = 0; i < Math.floor(verticalPhotos.length); i = i + 2) {
   );
 }
 
-//const trozoSize = Math.max(Math.ceil(initialSlides.length / 10), 1000);
-const trozoSize = 450;
+initialSlides = initialSlides.sort((a, b) => {
+  return a.tags.length - b.tags.length;
+});
+
+const trozoSize = 500;
 const trozos: Slide[][] = [];
 
 for (let i = 0; i < Math.ceil(initialSlides.length / trozoSize); i++) {
@@ -39,9 +42,6 @@ function orderSlides(inputSlides: Slide[]): Slide[] {
   const orderedSlides: Slide[] = [];
 
   let currentSlide = slides.shift();
-  // if (currentSlide) {
-  //   orderedSlides.push(currentSlide);
-  // }
   while (slides.length > 0) {
     if (currentSlide) {
       orderedSlides.push(currentSlide);
@@ -57,6 +57,9 @@ function orderSlides(inputSlides: Slide[]): Slide[] {
       currentSlide = bestScoreSlide;
       slides = slides.filter(slide => slide !== currentSlide);
     }
+  }
+  if (currentSlide) {
+    orderedSlides.push(currentSlide);
   }
   return orderedSlides;
 }
