@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { Slide } from './slide.model';
 import { fileName } from '.';
 
-export function writeData(slides: Slide[], score: number) {
+export function writeData(slides: Slide[], score: number, chunkSize: number) {
   let fileStr: string = `${String(slides.length)}\n`;
   for (const slide of slides) {
     if (Array.isArray(slide.photos)) {
@@ -17,5 +17,5 @@ export function writeData(slides: Slide[], score: number) {
   if (!fs.existsSync(`./results/${dirName}`)){
     fs.mkdirSync(`./results/${dirName}`);
 }
-  fs.writeFileSync(`./results/${dirName}/${score}_${(new Date()).toLocaleTimeString()}`, fileStr);
+  fs.writeFileSync(`./results/${dirName}/${score}_${chunkSize}_${(new Date()).toLocaleTimeString()}`, fileStr);
 }
